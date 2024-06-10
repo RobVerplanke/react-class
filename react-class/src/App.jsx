@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 class ClassInput extends Component {
   constructor(props) {
@@ -32,9 +32,11 @@ class ClassInput extends Component {
 
   handleDelete(e) {
     e.preventDefault();
-    this.setState((state) => ({
-      ...state.todos.splice(e.target.id, 1),
-    }));
+    const list = [...this.state.todos];
+    const index = e.target.id;
+
+    list.splice(index, 1);
+    if (!index !== -1) this.setState({ todos: list });
   }
 
   render() {
