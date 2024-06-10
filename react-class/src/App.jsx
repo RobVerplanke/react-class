@@ -1,72 +1,25 @@
-/* eslint-disable react/prop-types */
-import { Component } from 'react';
+import { useState } from 'react';
+import Counter from './Counter.jsx';
+import Todo from './Todo.jsx';
 
-class ClassInput extends Component {
-  constructor(props) {
-    super(props);
+export default function App() {
+  const [counter, setCounter] = useState(0);
 
-    this.state = {
-      todos: [],
-      inputVal: '',
-    };
-
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
+  function incrementCounter() {
+    setCounter((prevCounter) => prevCounter + 1);
   }
 
-  handleInputChange(e) {
-    this.setState((state) => ({
-      ...state,
-      inputVal: e.target.value,
-    }));
+  function decrementCounter() {
+    setCounter((prevCounter) => prevCounter - 1);
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
-    this.setState((state) => ({
-      todos: state.todos.concat(state.inputVal),
-      inputVal: '',
-    }));
-  }
-
-  handleDelete(e) {
-    e.preventDefault();
-    const list = [...this.state.todos];
-    const index = e.target.id;
-
-    list.splice(index, 1);
-    if (!index !== -1) this.setState({ todos: list });
-  }
-
-  render() {
-    return (
-      <section>
-        <h3>{this.props.name}</h3>
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor="task-entry">Enter a task: </label>
-          <input
-            type="text"
-            name="task-entry"
-            value={this.state.inputVal}
-            onChange={this.handleInputChange}
-          />
-          <button type="submit">Submit</button>
-        </form>
-        <h4>All the tasks!</h4>
-        <ul>
-          {this.state.todos.map((todo, index) => (
-            <>
-              <li key={todo}>{todo}</li>
-              <button type="button" id={index} onClick={this.handleDelete}>
-                Delete
-              </button>
-            </>
-          ))}
-        </ul>
-      </section>
-    );
-  }
+  return (
+    <>
+      <Counter counter={counter} />
+      <Todo
+        callbackIncrement={incrementCounter}
+        callbackDecrement={decrementCounter}
+      />
+    </>
+  );
 }
-
-export default ClassInput;

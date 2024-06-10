@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Component } from 'react';
 
-class Count extends Component {
+export default class Counter extends Component {
   constructor(props) {
     super(props);
 
@@ -13,10 +13,8 @@ class Count extends Component {
   render() {
     return (
       <>
-        <p>Amount: {this.state.counter}</p>
+        <p>Amount: {this.props.counter}</p>
       </>
     );
   }
 }
-
-export default Count;
