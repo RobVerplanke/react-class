@@ -1,5 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Component } from 'react';
+import TodoItem from './TodoItem.jsx';
+import EditForm from './EditForm.jsx';
 
 export default class Todo extends Component {
   constructor(props) {
@@ -8,11 +10,14 @@ export default class Todo extends Component {
     this.state = {
       todos: [],
       inputVal: '',
+      editIndex: null,
     };
 
-    this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.editTodo = this.editTodo.bind(this);
   }
 
   handleInputChange(e) {
@@ -43,6 +48,26 @@ export default class Todo extends Component {
     this.props.callbackDecrement();
   }
 
+  handleEdit(e) {
+    e.preventDefault();
+    const index = parseInt(e.target.id, 10);
+
+    this.setState({
+      editIndex: index,
+    });
+  }
+
+  editTodo(newVal, id) {
+    const updatedTotos = [...this.state.todos];
+    updatedTotos[id] = newVal;
+
+    this.setState((state) => ({
+      ...state,
+      todos: updatedTotos,
+      editIndex: null,
+    }));
+  }
+
   render() {
     return (
       <section>
@@ -61,10 +86,24 @@ export default class Todo extends Component {
         <ul>
           {this.state.todos.map((todo, index) => (
             <>
-              <li key={index}>{todo}</li>
-              <button type="button" id={index} onClick={this.handleDelete}>
-                Delete
-              </button>
+              {this.state.editIndex !== index && (
+                <TodoItem
+                  key={index}
+                  todo={todo}
+                  index={index}
+                  handleDelete={this.handleDelete}
+                  handleEdit={this.handleEdit}
+                />
+              )}
+              {this.state.editIndex === index && (
+                <EditForm
+                  key={index}
+                  index={index}
+                  inputVal={todo}
+                  handleResubmit={this.editTodo}
+                  editTodo={this.editTodo}
+                />
+              )}
             </>
           ))}
         </ul>
